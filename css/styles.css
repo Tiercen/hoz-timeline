@@ -1,0 +1,182 @@
+:root {
+    --timeline-title-spacing: 2.5rem;
+    --marker-size: 2em;
+    --tick-height: 2rem;
+
+    --timeline-hover-font-size: 2em;
+    --timeline-hover-color: green;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 95%;
+    margin: 0 auto;
+    
+}
+
+#timeline-con {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+    background-color: aqua;
+    padding: 1rem;
+}
+
+
+#timeline {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+ 
+    height: 70vh;
+    width: 100%;
+}
+
+#line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    /* width: 100%; */
+    height: 2px;
+    background: #333;
+}
+
+.event {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    width: 100%;
+}
+
+.marker {
+    width: var(--marker-size);
+    height: var(--marker-size);
+    background: #333;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.marker:hover {
+    background: #fff;
+}
+
+.event::before, .event::after {
+    content: "";
+    position: absolute;
+    width: .2em;
+    height: var(--tick-height);
+    background: #333;
+    /* z-index: 15; */
+}
+
+.event::before {
+    top: 100%;
+    left: calc(50% -1px);
+}
+
+.event::after {
+    bottom: 100%;
+    left: calc(50% -1px);
+}
+
+.event:hover::before, .event:hover::after {
+    background: #fff;
+
+}
+
+.details {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+
+    background-color: orange;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 1em;
+
+    max-width: 25rem;
+    margin: 0 auto;
+}
+
+.details .description, .details .details-title {
+    text-align: center;
+    padding: .5rem 1em;
+}
+
+.marker[aria-expanded="true"] ~ .details {
+    min-height: 15rem;
+    max-height: 700px;
+    z-index: 25;
+
+    width: 20rem;
+    padding: 1.em;
+}
+
+.title, .date {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+
+    font-size: 1.5em;
+    font-weight: bold;
+    /* white-space: nowrap; */
+}
+
+.event:nth-child(even) .title {
+    bottom: calc(50% + var(--timeline-title-spacing));
+}
+
+.event:nth-child(even) .date {
+    top: calc(50% + var(--timeline-title-spacing));
+}
+
+.event:nth-child(odd) .title {
+    top: calc(50% + var(--timeline-title-spacing));
+}
+
+.event:nth-child(odd) .date {
+    bottom: calc(50% + var(--timeline-title-spacing));
+}
+
+.marker:hover .title, .marker:hover .date {
+    font-size: 2em;
+    color: blue;
+}
+
+.details-btn {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+    padding: 1rem;
+}
+
+.timeline-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline-nav > button {
+    margin: 1rem;
+    padding: .5rem;
+}
