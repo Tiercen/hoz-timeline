@@ -88,19 +88,46 @@ function addInteractivity() {
       const prevButton = document.getElementById('prev');
       const nextButton = document.getElementById('next');
       
-      prevButton.addEventListener('click', () => {
-          timelineContainer.scrollTo({
-              left: timelineContainer.scrollLeft - (totalWidth * timelineSpace / numSegments), // Change this value to adjust the scroll distance
-              behavior: 'smooth'
-          });
-      });
+    //   prevButton.addEventListener('click', () => {
+    //       timelineContainer.scrollTo({
+    //           left: timelineContainer.scrollLeft - (totalWidth * timelineSpace / numSegments), // Change this value to adjust the scroll distance
+    //           behavior: 'smooth'
+    //       });
+    //   });
       
-      nextButton.addEventListener('click', () => {
-          timelineContainer.scrollTo({
-              left: timelineContainer.scrollLeft + (totalWidth * timelineSpace / numSegments), // Change this value to adjust the scroll distance
-              behavior: 'smooth'
-          });
-      });
+    //   nextButton.addEventListener('click', () => {
+    //       timelineContainer.scrollTo({
+    //           left: timelineContainer.scrollLeft + (totalWidth * timelineSpace / numSegments), // Change this value to adjust the scroll distance
+    //           behavior: 'smooth'
+    //       });
+    //   });
+
+    prevButton.addEventListener('click', () => scrollBasedOnVisibleEvents('prev'));
+    nextButton.addEventListener('click', () => scrollBasedOnVisibleEvents('next'));
+
+}
+
+function scrollBasedOnVisibleEvents(direction) {
+    const timelineContainer = document.getElementById('timeline-con');
+    const events = document.querySelectorAll('.event');
+    const containerWidth = timelineContainer.offsetWidth;
+    let scrollDistance = 0;
+
+    // Calculate the number of visible events
+    for (const event of events) {
+        const eventWidth = event.offsetWidth;
+        if (scrollDistance + eventWidth <= containerWidth) {
+            scrollDistance += eventWidth;
+        } else {
+            break;
+        }
+    }
+
+    // Scroll left or right based on the direction
+    timelineContainer.scrollTo({
+        left: timelineContainer.scrollLeft + (direction === 'next' ? scrollDistance : -scrollDistance),
+        behavior: 'smooth'
+    });
 }
 
 function calculateLeftPosition(e, index, total) {
