@@ -178,5 +178,14 @@
         "date": "11/10/2023",
         "description": "In the fall of 2023 after the COVID-19 pandemic, Scrappu and I decided we really wanted to try and make all our dreams come true.  She started going to University at Purdue.  We are Boilermakers now!  With Scrappu starting school I decided to pick up some new skills too.  I started a full start developer program with CodeCademy.  This is where Tesseract-23 was born.",
         "img": "./va-in.png"
+    },
+    {
+        "event": "END",
+        "title": "The END",
+        "year": "2023",
+        "month": "October",
+        "date": "",
+        "description": "This is the end of the time line",
+        "img": "./end.png"
     }
 ]

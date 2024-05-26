@@ -4,7 +4,11 @@ const timelineSpace = 0.81;
 // Get data from life-events.json
 fetch('./data/life-events.json')
     .then(response => response.json())
-    .then(data => createTimeline(data));
+    .then(data => {
+        // Sort data in chronological order
+        data.sort((a, b) => new Date(a.date) - new Date(b.date));
+        createTimeline(data);
+    });
 
 function createTimeline(data) {
     const timeline = document.getElementById('timeline');
@@ -33,6 +37,15 @@ function createTimeline(data) {
         totalWidth += eventWidth;
             
     });
+
+    // Create an extra div with a fixed width at the end of the timeline
+    const extraSpace = document.createElement('div');
+    extraSpace.className = 'event extra-space';
+    extraSpace.style.width = '30%'; // Adjust this value as needed
+    timeline.appendChild(extraSpace);
+
+    // Update the total width to include the extra space
+    totalWidth += parseInt(extraSpace.style.width);
 
     // Set the width of the #line element based on the calculated total width
     const line = document.getElementById('line');
@@ -87,20 +100,6 @@ function addInteractivity() {
     
       const prevButton = document.getElementById('prev');
       const nextButton = document.getElementById('next');
-      
-    //   prevButton.addEventListener('click', () => {
-    //       timelineContainer.scrollTo({
-    //           left: timelineContainer.scrollLeft - (totalWidth * timelineSpace / numSegments), // Change this value to adjust the scroll distance
-    //           behavior: 'smooth'
-    //       });
-    //   });
-      
-    //   nextButton.addEventListener('click', () => {
-    //       timelineContainer.scrollTo({
-    //           left: timelineContainer.scrollLeft + (totalWidth * timelineSpace / numSegments), // Change this value to adjust the scroll distance
-    //           behavior: 'smooth'
-    //       });
-    //   });
 
     prevButton.addEventListener('click', () => scrollBasedOnVisibleEvents('prev'));
     nextButton.addEventListener('click', () => scrollBasedOnVisibleEvents('next'));
@@ -111,7 +110,10 @@ function scrollBasedOnVisibleEvents(direction) {
     const timelineContainer = document.getElementById('timeline-con');
     const events = document.querySelectorAll('.event');
     const containerWidth = timelineContainer.offsetWidth;
+    const containerScrollWidth = timelineContainer.scrollWidth;
     let scrollDistance = 0;
+    let canScroll = true;
+    const extraScrollPercent = .15;
 
     // Calculate the number of visible events
     for (const event of events) {
@@ -119,15 +121,26 @@ function scrollBasedOnVisibleEvents(direction) {
         if (scrollDistance + eventWidth <= containerWidth) {
             scrollDistance += eventWidth;
         } else {
+            // Check if the last event is fully visible
+            const lastEvent = events[events.length - 1];
+            const lastEventRight = lastEvent.offsetLeft + lastEvent.offsetWidth;
+            const containerRight = timelineContainer.scrollLeft + containerWidth + 100;
+
+            if (direction === 'next' && lastEventRight <= containerRight) {
+                // Cannot scroll further right
+                canScroll = false;
+            }
             break;
         }
     }
 
-    // Scroll left or right based on the direction
-    timelineContainer.scrollTo({
-        left: timelineContainer.scrollLeft + (direction === 'next' ? scrollDistance : -scrollDistance),
-        behavior: 'smooth'
-    });
+    // Scroll left or right based on the direction if possible
+    if (canScroll) {
+        timelineContainer.scrollTo({
+            left: timelineContainer.scrollLeft + (direction === 'next' ? scrollDistance : -scrollDistance),
+            behavior: 'smooth'
+        });
+    }
 }
 
 function calculateLeftPosition(e, index, total) {
